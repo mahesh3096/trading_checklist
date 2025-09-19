@@ -1,4 +1,4 @@
-%%writefile app.py
+
 import streamlit as st
 
 st.set_page_config(page_title="Trading Checklist", layout="centered")
@@ -133,4 +133,5 @@ if st.session_state.checked_options:
             st.rerun()
     st.button("Restore All to Unchecked", on_click=restore_all)
 else:
+
     st.info("No items are checked yet.")
