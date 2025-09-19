@@ -110,7 +110,6 @@ elif st.session_state.unchecked_options :
     st.error("⚠️ FAILURE FOMO Entry ❌ Definetly fail 💯 ")
 else:
     st.info("Partial successful ✅ B Entry")
-st.markdown("---") # Add a horizontal rule for visual separation
 
 # Display unchecked options
 st.subheader("Unchecked Items")
@@ -135,3 +134,4 @@ if st.session_state.checked_options:
 else:
 
     st.info("No items are checked yet.")
+
