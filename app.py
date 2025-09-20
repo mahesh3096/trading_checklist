@@ -1,38 +1,47 @@
 
 import streamlit as st
+import pandas as pd
+import random
+from datetime import datetime
+import os
+import altair as alt
 
-#list of Market direction
-st.set_page_config(page_title="Trading Checklist", layout="centered")
-st.title("Trading Checklist ✅")
-market_dir ={
-    f'price > Open',
-    f'price > VWAP',
-    f'price > EMA20,STRND(3,5)'
-    }
-#engine = create_engine('sqlite:///example.db')  # Replace with your DB connection string
-market_dir_vars = {}
-for item in market_dir:
-    market_dir_vars[item] = st.checkbox(item, key=item)
-market_phase=''
-market_img=""
-if (market_dir_vars['price > Open']==True and market_dir_vars['price > VWAP']==True and market_dir_vars['price > EMA20,STRND(3,5)']==True):
-    market_phase="Bullish market !"
-    market_img='bull.jpg'
-elif (market_dir_vars['price > Open']==False and market_dir_vars['price > VWAP']==False and market_dir_vars['price > EMA20,STRND(3,5)']==False):
-    market_phase="Bearish market !"
-    market_img='bear.jpg'
-    
-else:
-    market_phase="Reversal phase !"
-    market_img='pig.jpg'
-st.markdown(f"<h1 style='color: #FF6347;'>{market_phase}</h1>", unsafe_allow_html=True)
-st.image(market_img, width=200)
+st.set_page_config(page_title="Trading Checklist", layout="wide")
 
 
-# Define the fixed A+ option
+# --- Sidebar Navigation ---
+page = st.sidebar.radio("📌 Navigate", ["Checklist ✅", "Trade Journal 📒", "Stats Dashboard 📊", "Settings ⚙️"])
+
+# --- Confetti Celebration ---
+def confetti():
+    st.balloons()
+
+# --- Motivational Quotes ---
+quotes = [
+    "Protect your capital at all costs; profits will follow.",
+    "The first rule of trading is not to lose money; the second rule is not to forget the first. – Warren Buffett",
+    "Trade small, manage risk, survive to trade another day.",
+    "Trading is not about being right all the time; it’s about managing probabilities.",
+    "The market is never certain, but your preparation can be.",
+    "Focus on the process, not the outcome; probability favors the disciplined.",
+    "Discipline weighs ounces, regret weighs tons.",
+    "Consistency beats brilliance in trading.",
+    "Patience is not passive; it’s concentrated strength.",
+    "Amateurs think about how much they can make. Professionals think about how much they can lose.",
+    "Control your losses, and the wins will take care of themselves.",
+    "Emotions are the enemy of consistent trading.",
+    "Risk comes from not knowing what you are doing.",
+    "Trade what you see, not what you think.",
+    "Consistency is the key to trading success.",
+    "Without discipline, a strategy is just a wish.",
+    "Small losses protect big gains.",
+    "A good trader focuses on probability, not certainty.",
+    "Survival is the first step to profitability."
+]
+
+
+# ✅ Define checklist options globally
 a_plus_option = "💯 🎯 ✅ A+ (BOF, BOT)"
-
-# Define the full list of options (excluding the A+ option)
 full_options_list = [
     "😎 I’m a risk manager first, and a trader second",
     "✅ Tzone",
@@ -50,114 +59,192 @@ full_options_list = [
     "👍 Rev only @ interval not @ Rectangle",
 ]
 
-# Initialize session state for options if they don't exist, ensuring all options are present
-if 'unchecked_options' not in st.session_state:
-    st.session_state.unchecked_options = full_options_list.copy()
-if 'checked_options' not in st.session_state:
-    st.session_state.checked_options = []
+# ========================== PAGE 1: CHECKLIST ==========================
+if page == "Checklist ✅":
+    st.title("📋 Entry Check")
 
-if 'a_plus_checked' not in st.session_state:
-    st.session_state.a_plus_checked = False
+    # --- Market Direction Section ---
+    with st.container():
+        market_dir = [
+            "price > Open",
+            "price > VWAP",
+            "price > EMA20,STRND(3,5)"
+        ]
+        market_dir_vars = {}
+        for item in market_dir:
+            market_dir_vars[item] = st.checkbox(item, key=item)
 
+        if all(market_dir_vars.values()):
+            market_phase, market_img = "🟢 Bullish Market!", "bull.jpg"
+        elif not any(market_dir_vars.values()):
+            market_phase, market_img = "🔴 Bearish Market!", "bear.jpg"
+        else:
+            market_phase, market_img = "🟡 Reversal Phase!", "pig.jpg"
 
-# Function to move option to checked list
-def check_option(option):
-    if option in st.session_state.unchecked_options:
-        st.session_state.unchecked_options.remove(option)
-        st.session_state.checked_options.append(option)
+        st.markdown(f"<h2 style='text-align:center;color:#333;'>{market_phase}</h2>", unsafe_allow_html=True)
+        st.image(market_img, width=220, use_container_width=False)
 
-# Function to move option to unchecked list
-def uncheck_option(option):
-    if option in st.session_state.checked_options:
-        st.session_state.checked_options.remove(option)
-        st.session_state.unchecked_options.append(option)
+    # --- Checklist Section ---
+    with st.container():
+        # Initialize session_state
+        for key in ["unchecked_options", "checked_options", "a_plus_checked"]:
+            if key not in st.session_state:
+                if key == "unchecked_options":
+                    st.session_state.unchecked_options = full_options_list.copy()
+                elif key == "checked_options":
+                    st.session_state.checked_options = []
+                else:
+                    st.session_state.a_plus_checked = False
 
-# Function to move all checked items back to unchecked
-def restore_all():
-    st.session_state.unchecked_options.extend(st.session_state.checked_options)
-    st.session_state.checked_options = []
+        def check_option(option):
+            if option in st.session_state.unchecked_options:
+                st.session_state.unchecked_options.remove(option)
+                st.session_state.checked_options.append(option)
 
-# Function to toggle A+ option
-def toggle_a_plus():
-    st.session_state.a_plus_checked = not st.session_state.a_plus_checked
+        def uncheck_option(option):
+            if option in st.session_state.checked_options:
+                st.session_state.checked_options.remove(option)
+                st.session_state.unchecked_options.append(option)
 
+        def restore_all():
+            st.session_state.unchecked_options.extend(st.session_state.checked_options)
+            st.session_state.checked_options = []
 
-# Calculate counts
-total_options = len(full_options_list)
-checked_count = len(st.session_state.checked_options) + (1 if st.session_state.a_plus_checked else 0)
+        def toggle_a_plus():
+            st.session_state.a_plus_checked = not st.session_state.a_plus_checked
 
+        total_options = len(full_options_list) + 1
+        checked_count = len(st.session_state.checked_options) + (1 if st.session_state.a_plus_checked else 0)
+        progress = checked_count / total_options
+        st.progress(progress)
+        st.caption(f"📊 Checklist Progress: **{checked_count}/{total_options}**")
 
-# Determine status based on unchecked options and A+ option
-all_ok = not st.session_state.unchecked_options and st.session_state.a_plus_checked
-failure= st.session_state.unchecked_options
-# --- Dynamic page background color and styling ---
-if all_ok:
-    bg_color = "#d4edda"  # Light green
-elif failure:
-    bg_color = "#f8d7da"  # Light red
-else:
-    bg_color = "#FFDB58 "  # Light yellow
+        st.checkbox(a_plus_option, value=st.session_state.a_plus_checked, on_change=toggle_a_plus)
 
-page_bg = f"""
-<style>
-    .stApp {{
-        background-color: {bg_color};
-        font-size: 25px; /* Increased font size for the entire app */
-        color: black; /* Set text color to black */
-    }}
-    .stApp * {{ /* Apply font size and color to all elements within stApp */
-        font-size: 25px !important;
-        color: black !important;
-    }}
-    .stCheckbox label {{
-        font-size: 25px !important;
-    }}
-    /* Style for Streamlit buttons */
-    div.stButton > button:first-child {{
-        background-color: white;
-        color: black;
-    }}
-</style>
-"""
-st.markdown(page_bg, unsafe_allow_html=True)
+        # Status + confetti + tips
+        if checked_count == total_options:
+            st.markdown("<h3 style='color:green;text-align:center;'>🎉 SUCCESSFUL ✅ A+ Entry</h3>", unsafe_allow_html=True)
+            confetti()
+            st.info(random.choice(quotes))
+        elif st.session_state.unchecked_options:
+            st.markdown("<h3 style='color:red;text-align:center;'>⚠️ FAILURE ❌ Likely FOMO Entry</h3>", unsafe_allow_html=True)
+            st.info(random.choice(quotes))
+        else:
+            st.markdown("<h3 style='color:orange;text-align:center;'>⚡ Partial Success: B Entry</h3>", unsafe_allow_html=True)
+            st.info(random.choice(quotes))
+            st.snow()
 
-# Display checked count
-st.subheader(f"Checked: {checked_count}/{total_options + 1}") # +1 for the A+ option
+        
+        # Two-column layout for checklist items
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("🔴 Unchecked Items")
+            for option in st.session_state.unchecked_options:
+                st.button(option, key=f"unchecked_{option}", on_click=check_option, args=(option,))
+            if not st.session_state.unchecked_options:
+                st.info("All items checked!")
 
-# Display A+ option separately
-st.checkbox(a_plus_option, value=st.session_state.a_plus_checked, on_change=toggle_a_plus)
+        # Mood Tracker
+        st.subheader("📌 Mood Tracker")
+        mood = st.radio("How do you feel?", ["HRule😃", "FOMO/Hope😐", "Revenge😡"], horizontal=True)
 
+        # Notes + Profit Input
+        notes = st.text_area("Notes", key="notes")
+        profit_points = st.number_input("Profit/Loss Points", step=1)
 
-# Status message
-if all_ok:
-    st.success("🎉 SUCCESSFUL ✅ A+ Entry ")
-elif st.session_state.unchecked_options :
-    st.error("⚠️ FAILURE FOMO Entry ❌ Definetly fail 💯 ")
-else:
-    st.info("Partial successful ✅ B Entry")
+        # Save Trade Button
+        if st.button("💾 Save Trade"):
+            # --- Grade Calculation ---
+            if st.session_state.a_plus_checked and checked_count>=14:
+                grade = "A+"
+            elif checked_count < 13:
+                grade = "Failure"
+            else:
+                grade = "B"
 
-# Display unchecked options
-st.subheader("Unchecked Items")
-if st.session_state.unchecked_options:
-    for option in st.session_state.unchecked_options:
-        if st.button(option, key=f"unchecked_{option}"):
-            check_option(option)
+            record = {
+                "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "market_phase": market_phase,
+                "checklist_completion": f"{checked_count}/{total_options}",
+                "mood": mood,
+                "notes": notes,
+                "profit_points": profit_points,
+                "unchecked_items": ", ".join(st.session_state.unchecked_options),  # ✅ log unchecked
+                "grade": grade  # ✅ new column
+            }
+            df = pd.DataFrame([record])
+            file_exists = os.path.isfile("trades.csv")
+            df.to_csv("trades.csv", mode="a", header=not file_exists, index=False)
+            st.success("✅ Trade Record Saved!")
+
+        with col2:
+            st.subheader("🟢 Checked Items")
+            for option in st.session_state.checked_options:
+                st.button(option, key=f"checked_{option}", on_click=uncheck_option, args=(option,))
+            st.button("♻️ Restore All", on_click=restore_all)
+            if not st.session_state.checked_options:
+                st.info("No items checked yet.")
+
+# ========================== PAGE 2: TRADE JOURNAL ==========================
+elif page == "Trade Journal 📒":
+    st.title("📒 Trade Journal")
+    try:
+        df = pd.read_csv("trades.csv")
+        st.dataframe(df)
+        # 🔄 Reset option
+        if st.button("🗑️ Reset Trades (Clear CSV)"):
+            os.remove("trades.csv")
+            st.success("✅ All trade records cleared!")
             st.rerun()
-else:
-    st.info("All items in the main checklist are checked!")
+    except FileNotFoundError:
+        st.info("No trades recorded yet.")
 
-st.markdown("---") # Add a horizontal rule for visual separation
+# ========================== PAGE 3: STATS DASHBOARD ==========================
+elif page == "Stats Dashboard 📊":
+    st.title("📊 Performance Dashboard")
+    try:
+        df = pd.read_csv("trades.csv")
+        total_trades = len(df)
+        
+        # ✅ Success trades = profit > 0
+        success_trades = len(df[df["profit_points"] > 0])
+        
+        st.metric("Total Trades", total_trades)
+        st.metric("Profitable Trades", success_trades)
+        
+        if total_trades > 0:
+            st.metric("Profit Ratio", f"{(success_trades/total_trades)*100:.2f}%")
 
-# Display checked options
-st.subheader("Checked Items")
-if st.session_state.checked_options:
-    for option in st.session_state.checked_options:
-        if st.button(option, key=f"checked_{option}"):
-            uncheck_option(option)
-            st.rerun()
-    st.button("Restore All to Unchecked", on_click=restore_all)
-else:
+            # ✅ Cumulative Profit Chart
+            st.subheader("📈 Cumulative Profit Trend")
+            df["cumulative_profit"] = df["profit_points"].cumsum()
+            st.line_chart(df["cumulative_profit"])
+            
+             # Bar chart: Profit per Trade (wider bars & color-coded)
+            st.subheader("📊 Profit per Trade")
+            df["trade_number"] = range(1, len(df)+1)
+            df["color"] = df["profit_points"].apply(lambda x: "green" if x >= 0 else "red")
 
-    st.info("No items are checked yet.")
+            chart = alt.Chart(df).mark_bar(size=30).encode(  # size sets bar width
+                x=alt.X("trade_number:O", title="Trade Number"),
+                y=alt.Y("profit_points:Q", title="Profit/Loss Points"),
+                color=alt.Color("color:N", scale=None, legend=None)
+            ).properties(width=700, height=400)
 
+            st.altair_chart(chart, use_container_width=True)
+    except:
+        st.info("No stats yet. Save some trades first.")
 
+# ========================== PAGE 4: SETTINGS ==========================
+elif page == "Settings ⚙️":
+    st.title("⚙️ Settings & Tools")
+    st.subheader("📈 Risk Calculator")
+    capital = st.number_input("Capital (₹)", value=100000, step=1000)
+    risk_pct = st.slider("Risk % per trade", 0.5, 5.0, 1.0)
+    quantity = st.number_input("Quantity per lot", value=75)
+    stop_loss = st.number_input("Stop-loss points", value=20)
+
+    if st.button("🔢 Calculate Lot Size"):
+        risk_amount = capital * (risk_pct/100)
+        lot_size = risk_amount // (stop_loss * quantity)
+        st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
