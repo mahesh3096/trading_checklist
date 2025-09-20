@@ -1,8 +1,33 @@
 
 import streamlit as st
 
+#list of Market direction
 st.set_page_config(page_title="Trading Checklist", layout="centered")
 st.title("Trading Checklist ✅")
+market_dir ={
+    f'price > Open',
+    f'price > VWAP',
+    f'price > EMA20,STRND(3,5)'
+    }
+#engine = create_engine('sqlite:///example.db')  # Replace with your DB connection string
+market_dir_vars = {}
+for item in market_dir:
+    market_dir_vars[item] = st.checkbox(item, key=item)
+market_phase=''
+market_img=""
+if (market_dir_vars['price > Open']==True and market_dir_vars['price > VWAP']==True and market_dir_vars['price > EMA20,STRND(3,5)']==True):
+    market_phase="Bullish market !"
+    market_img='bull.jpg'
+elif (market_dir_vars['price > Open']==False and market_dir_vars['price > VWAP']==False and market_dir_vars['price > EMA20,STRND(3,5)']==False):
+    market_phase="Bearish market !"
+    market_img='bear.jpg'
+    
+else:
+    market_phase="Reversal phase !"
+    market_img='pig.jpg'
+st.markdown(f"<h1 style='color: #FF6347;'>{market_phase}</h1>", unsafe_allow_html=True)
+st.image(market_img, width=200)
+
 
 # Define the fixed A+ option
 a_plus_option = "💯 🎯 ✅ A+ (BOF, BOT)"
@@ -134,4 +159,5 @@ if st.session_state.checked_options:
 else:
 
     st.info("No items are checked yet.")
+
 
