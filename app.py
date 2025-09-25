@@ -43,20 +43,21 @@ quotes = [
 # ✅ Define checklist options globally
 a_plus_option = "💯 🎯 ✅ A+ (BOF, BOT)"
 full_options_list = [
-    "😎 I’m a risk manager first, and a trader second",
+    "😎 I’m a risk manager. Max risk is 2 Lot",
     "✅ Tzone",
     "💪 Strend (5,3,1)",
-    "💫 Ema20(3)",
-    "🎯 Spot 🎯",
+    "💪 Ema20(3)",
+    "💪 Spot 💪",
     "🎯 Future 🎯",
     "🎯 Option 🎯",
-    "💫DPoc,Strnd,vwap(opt)",
-    "💫RSI,OI",
+    "🎯 DPoc,Strnd,vwap(opt)",
+    "🎯 RSI,OI",
     "👍 Ccandle closed & <40",
     "👍 No pre BO & OBS (TL/IL)",
     "👍 No inside CPR, ORB Rectangle entry",
     "👍 Max 1,2 Tcandle before Ccandle",
     "👍 Rev only @ interval not @ Rectangle",
+    
 ]
 
 # ========================== PAGE 1: CHECKLIST ==========================
@@ -248,3 +249,4 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
