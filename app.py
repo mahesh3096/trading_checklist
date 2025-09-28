@@ -41,11 +41,12 @@ full_options_list = [
     "❤️ OPT Bold Candle",
     "❤️ OPT DPoc,Strnd,BB, vwap(opt)",
     "❤️ OPT RSI,OI",
-    "👍 Ccandle closed & <40",
-    "👍 No pre BO & OBS (TL/IL)",
-    "👍 No inside CPR, ORB, Rectangle entry",
-    "👍 Max 1,2 Tcandle before Ccandle",
-    "👍 Rev only @ interval not @ Rectangle",
+    """ 👍 Rev only @ interval not @ Rectangle
+      👍 No after 3pm, ATR&ADX < T entry
+      👍 No inside CPR, ORB, Rectangle entry
+       👍 No pre BO & OBS (TL/IL)
+      👍 Ccandle closed & <40
+     👍 Max 1,2 Tcandle before Ccandle"""
 ]
 
 # ========================== PAGE 1: CHECKLIST ==========================
@@ -315,3 +316,4 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
