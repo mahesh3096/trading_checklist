@@ -41,11 +41,11 @@ full_options_list = [
     "❤️ OPT Bold Candle",
     "❤️ OPT DPoc,Strnd,BB, vwap(opt)",
     "❤️ OPT RSI,OI",
-    """ 👍 Rev only @ interval not @ Rectangle
-      👍 No after 3pm, ATR&ADX < T entry
-      👍 No inside CPR, ORB, Rectangle entry
-       👍 No pre BO & OBS (TL/IL)
-      👍 Ccandle closed & <40
+    """ 👍 Rev only @ interval not @ Rectangle\n
+      👍 No after 3pm, ATR&ADX < T entry\n
+      👍 No inside CPR, ORB, Rectangle entry\n
+       👍 No pre BO & OBS (TL/IL)\n
+      👍 Ccandle closed & <40\n
      👍 Max 1,2 Tcandle before Ccandle"""
 ]
 
@@ -316,4 +316,5 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
 
