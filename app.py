@@ -30,7 +30,7 @@ quotes = [
 ]
 
 # ✅ Define checklist options globally
-a_plus_option = "💯 🎯 ✅ A+ (BOF, BOT)"
+a_plus_option = "💯✅ A+(BOF, BOT)(2,3,4🕯️)"
 full_options_list = [
     "😎 I’m a risk manager. Max risk is 2 Lot",
     "💪 Ilevel BOF,BOT,TOB,COB",
@@ -311,6 +311,7 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
 
 
 
