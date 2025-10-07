@@ -150,6 +150,7 @@ if page == "Checklist ✅":
               "<h3 style='color:green;text-align:center;'>🎉 SUCCESSFUL ✅ A+ Entry</h3>",
               unsafe_allow_html=True
           )
+          st.caption("lot size: 2")
           st.markdown(
               """
               <style>
@@ -167,6 +168,7 @@ if page == "Checklist ✅":
                 "<h3 style='color:orange;text-align:center;'>⚡ Partial Success: B Entry</h3>",
                 unsafe_allow_html=True
             )
+            st.caption("lot size: 1")
             st.markdown(
                 """
                 <style>
@@ -311,6 +313,7 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
 
 
 
