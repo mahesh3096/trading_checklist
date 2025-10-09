@@ -1,5 +1,3 @@
-%%writefile app.py
-
 
 import streamlit as st
 import pandas as pd
@@ -348,6 +346,7 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
 
 
 
