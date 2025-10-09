@@ -214,7 +214,7 @@ if page == "Checklist ✅":
             st.subheader("🔴 Unchecked Items")
             if show_checklist_content:
                 for option in st.session_state.unchecked_options:
-                    checked = st.checkbox(option, key=f"check_{option}"
+                    checked = st.checkbox(option, key=f"check_{option}")
                     if checked:
                         check_option(option)
             else:
@@ -315,6 +315,7 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
 
 
 
