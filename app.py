@@ -1,3 +1,5 @@
+%%writefile app.py
+
 
 import streamlit as st
 import pandas as pd
@@ -211,21 +213,53 @@ if page == "Checklist ✅":
         # Two-column layout for unchecked/checked
         col1, col2 = st.columns(2)
         with col1:
-            st.subheader("🔴 Unchecked Items")
-            if show_checklist_content:
-                for option in st.session_state.unchecked_options:
-                    st.button(option, key=f"unchecked_{option}", on_click=check_option, args=(option,))
+          st.subheader("🔴 Unchecked Items")
+          if show_checklist_content:
+            with st.form("checklist_form"):
+              selected_now = []
+              checkbox_keys = []
 
-            else:
-                st.info("✅ Select TZone, Mode, and ILevel to see checklist.")
+              for option in st.session_state.unchecked_options:
+                  key = f"chk_un_{option}"
+                  checked = st.checkbox(option, key=key)
+                  if checked:
+                      selected_now.append(option)
+                  checkbox_keys.append(key)
+
+              submitted = st.form_submit_button("✅ Submit Selected")
+
+            if submitted:
+                if selected_now:
+                    for item in selected_now:
+                        check_option(item)
+
+                    # ✅ clear stale checkbox states
+                    for key in checkbox_keys:
+                        if key in st.session_state:
+                            del st.session_state[key]
+
+                    st.success(f"Updated {len(selected_now)} item(s).")
+                    st.rerun()
+                else:
+                    st.warning("No items selected!")
+
+          else:
+              st.info("✅ Select TZone, Mode, and ILevel to see checklist.")
 
         with col2:
             st.subheader("🟢 Checked Items")
             if show_checklist_content:
-                for option in st.session_state.checked_options:
-                    st.button(option, key=f"checked_{option}", on_click=uncheck_option, args=(option,))
-                st.button("♻️ Restore All", on_click=lambda: st.session_state.unchecked_options.extend(st.session_state.checked_options) or st.session_state.checked_options.clear())
-                if not st.session_state.checked_options:
+                if st.session_state.checked_options:
+                    for option in list(st.session_state.checked_options):
+                        st.button(option, key=f"checked_{option}", on_click=uncheck_option, args=(option,))
+                    st.button(
+                        "♻️ Restore All",
+                        on_click=lambda: (
+                            st.session_state.unchecked_options.extend(st.session_state.checked_options),
+                            st.session_state.checked_options.clear()
+                        )
+                    )
+                else:
                     st.info("No items checked yet.")
 
         
@@ -314,17 +348,6 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
-
-
-
-
-
-
-
-
-
-
-
 
 
 
