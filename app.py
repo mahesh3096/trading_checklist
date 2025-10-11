@@ -229,7 +229,7 @@ if page == "Checklist ✅":
                       selected_now.append(option)
                   checkbox_keys.append(key)
 
-              submitted = st.form_submit_button("✅ Submit Selected")
+              submitted = st.form_submit_button("✅ Submit")
 
             if submitted:
                 if selected_now:
@@ -351,6 +351,7 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
 
 
 
