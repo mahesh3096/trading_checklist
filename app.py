@@ -41,7 +41,7 @@ full_options_list = [
     "❤️ OPT DPoc,Strnd,BB, vwap(opt)",
     "❤️ OPT RSI,OI",
     "😎 I’m a risk manager. Max risk is 2 Lot",
-    """ 👍 Rev only @ interval not @ Rectangle👍 Before 3pm, ATR&ADX > T, Outside CPR, ORB, Rectangle entry\n /n👍 Strend&EMA20 Broken👍 No pre BO & OBS (TL/IL)👍 Ccandle closed & <40 BO Ilevel👍 Max 1,2 Tcandle before Ccandle """
+    """ 👍 Rev only @ interval not @ Rectangle👍 Before 3pm, ATR&ADX > T, Outside CPR, ORB, Rectangle entry \n 👍 Strend&EMA20 Broken👍 No pre BO & OBS (TL/IL)👍 Ccandle closed & <40 BO Ilevel👍 Max 1,2 Tcandle before Ccandle """
 ]
 
 # ========================== PAGE 1: CHECKLIST ==========================
@@ -346,6 +346,7 @@ elif page == "Settings ⚙️":
         risk_amount = capital * (risk_pct/100)
         lot_size = risk_amount // (stop_loss * quantity)
         st.success(f"Allowed Risk: ₹{risk_amount:.2f}, Lot Size: {int(lot_size)} lots")
+
 
 
 
